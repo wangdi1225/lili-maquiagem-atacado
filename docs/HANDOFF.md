@@ -129,7 +129,7 @@ Devise mapping :spree_user (路由 /user/spree_user/sign_in, 由 spree_auth_devi
 | 结账表单(CNPJ 14 位校验等) | `GET/POST /checkout` | `storefront/checkout#new/create` |
 | 订单完成页 + WhatsApp 深链 | `/pedido/:number` | `storefront/checkout#complete`(wa.me + URL-encoded 订单摘要) |
 | 占位商品图(无图时 💄 色块) | — | `StorefrontHelper#product_image` |
-| 商品卡快捷加购("+" 按钮,加 1 件首变体) | 首页/分类网格 | `_product_card.html.erb` |
+| 商品卡快捷加购("+" 按钮,加 1 件首变体;**加购后停留原页**不跳购物车,悬浮条+flash 反馈) | 首页/分类网格 | `_product_card.html.erb` / `cart#add`(redirect_back) |
 | 悬浮迷你购物车条(数量/合计/去结算或报价) | 全站底部 | `_mini_cart.html.erb`(布局渲染) |
 | 未达起订额时的**WhatsApp 报价通道**(cotação) | 购物车页/悬浮条 | `StorefrontHelper#whatsapp_quote_link` |
 | 起订额进度条 | 购物车页 | `cart/show.html.erb` |

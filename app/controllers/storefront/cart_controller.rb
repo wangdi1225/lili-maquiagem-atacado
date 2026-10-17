@@ -10,8 +10,9 @@ module Storefront
       quantity = [params[:quantity].to_i, 1].max
       result = Spree::Cart::AddItem.call(order: order, variant: variant, quantity: quantity)
       if result.success?
-        flash[:notice] = "Produto adicionado ao carrinho."
-        redirect_to storefront_cart_path
+        flash[:notice] = "✓ Adicionado ao carrinho — continue comprando ou finalize quando quiser."
+        # Permanece na página atual para não interromper a compra contínua
+        redirect_back fallback_location: storefront_cart_path
       else
         flash[:alert] = "Não foi possível adicionar: #{result.error}"
         redirect_back fallback_location: root_path
