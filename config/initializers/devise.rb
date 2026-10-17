@@ -1,1 +1,8 @@
-Devise.secret_key = "03840a94ad09e8dfa9d2726f08f2abac0405324b796fdda527ed59fcbddc37e6946176934de78d3d7a068c8e6b15afaa3f83"
+# Devise secret key.
+# - production: MUST come from ENV (set via systemd/ENV: DEVISE_SECRET_KEY)
+# - dev/test:   falls back to an insecure dev-only value
+if Rails.env.production?
+  Devise.secret_key = ENV.fetch("DEVISE_SECRET_KEY")
+else
+  Devise.secret_key = ENV.fetch("DEVISE_SECRET_KEY", "dev-only-insecure-key-0123456789abcdef0123456789abcdef")
+end

@@ -55,7 +55,7 @@ bin/rails s -p 3000                     # 启动
 ```
 
 - 店面:http://localhost:3000/
-- 后台:http://localhost:3000/admin (当前演示账号 admin@lilimaquiagem.local / Wholesale#2026)
+- 后台:http://localhost:3000/admin (演示账号在首次 `db:seed` 时由 ADMIN_EMAIL/ADMIN_PASSWORD 环境变量创建;本地当前为 admin@lilimaquiagem.local / 见各自环境)
 
 ## 购买流程(店面)
 
