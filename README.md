@@ -1,5 +1,8 @@
 # Lili Maquiagem Atacado — 彩妆批发单店系统
 
+> **交接/运维请看 [`docs/HANDOFF.md`](docs/HANDOFF.md)**:架构详解、功能清单、
+> 生产部署与运维手册、故障排查、维护者上手指南。
+
 基于 **Spree Commerce 5.6(Ruby on Rails 7.2)** 的单店 B2B 彩妆批发网站,复刻巴西 Teeki 平台店铺
 (lilimaquiagem.com.br)的核心业务模式:
 
