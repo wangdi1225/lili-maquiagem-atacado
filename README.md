@@ -89,6 +89,11 @@ config.x.whatsapp.salespeople    = [...]          # 销售员名单(结账可选
 5. 店铺货币由 **Market** 委托:改 `store.default_market.currency = 'BRL'`(直接改 store 列无效)。
 6. 后台样式需 `spree:admin:tailwindcss:build`;`rails g spree:admin:install` 生成输入文件。
 7. 商品必须发布到渠道(ProductPublication)+ 有 BRL 价格才会出现在 `Spree::Product.available`。
+8. 店铺 locale 设为 pt-BR 后必须提供 pt-BR 数字翻译(config/locales/pt-BR.yml)+
+   `config.i18n.fallbacks = true`,否则后台价格解析(LocalizedNumber)会因
+   "Translation missing: ...separator" 崩溃。
+9. 后台建品价格填在"嵌套的 master 价格(BRL)输入框";顶层 product[price] 与嵌套
+   prices_attributes 同时提交会触发 spree_prices 唯一约束冲突(浏览器 UI 由 JS 同步,无此问题)。
 
 ## 生产部署建议(对齐参考站架构)
 

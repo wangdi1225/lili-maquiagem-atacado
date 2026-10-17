@@ -1,0 +1,75 @@
+pt-BR:
+  number:
+    currency:
+      format:
+        delimiter: "."
+        format: "%u %n"
+        precision: 2
+        separator: ","
+        significant: false
+        strip_insignificant_zeros: false
+        unit: "R$"
+    format:
+      delimiter: "."
+      precision: 3
+      round_mode: default
+      separator: ","
+      significant: false
+      strip_insignificant_zeros: false
+    human:
+      decimal_units:
+        format: "%n %u"
+        units:
+          unit: ""
+      format:
+        delimiter: ""
+        precision: 3
+        significant: true
+        strip_insignificant_zeros: true
+  date:
+    formats:
+      default: "%d/%m/%Y"
+      long: "%d de %B de %Y"
+      short: "%d de %B"
+    order:
+      - :day
+      - :month
+      - :year
+  time:
+    formats:
+      default: "%a, %d de %B de %Y, %H:%M:%S %z"
+      long: "%d de %B de %Y, %H:%M"
+      short: "%d/%m, %H:%M"
+    am: "am"
+    pm: "pm"
+
+  activerecord:
+    attributes:
+      spree/product:
+        name: "Nome"
+        description: "Descrição"
+        price: "Preço"
+        sku: "SKU"
+        status: "Status"
+        width: "Largura"
+        height: "Altura"
+        depth: "Profundidade"
+        weight: "Peso"
+        meta_title: "Meta título"
+        meta_description: "Meta descrição"
+        meta_keywords: "Meta palavras-chave"
+        shipping_category: "Categoria de envio"
+        tax_category: "Categoria de imposto"
+        available_on: "Disponível em"
+        slug: "Slug"
+      spree/variant:
+        sku: "SKU"
+        price: "Preço"
+        options_text: "Opções"
+      spree/order:
+        number: "Número"
+        state: "Estado"
+        total: "Total"
+        email: "E-mail"
+        item_total: "Subtotal"
+        created_at: "Criado em"

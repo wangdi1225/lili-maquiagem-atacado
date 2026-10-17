@@ -18,6 +18,9 @@ module WholesaleStore
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.2
 
+    # Fallback to default locale (en) when pt-BR translation is missing
+    config.i18n.fallbacks = true
+
     # Please, add to the `ignore` list any other `lib` subdirectories that do
     # not contain `.rb` files, or that should not be reloaded or eager loaded.
     # Common ones are `templates`, `generators`, or `middleware`, for example.
