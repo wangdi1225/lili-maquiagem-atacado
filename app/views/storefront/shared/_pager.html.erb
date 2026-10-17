@@ -1,0 +1,9 @@
+<% if defined?(@total_pages) && @total_pages > 1 %>
+  <% qbase = { sort: params[:sort], q: params[:q] }.compact %>
+  <% page_url = ->(pg) { "#{request.path}?#{qbase.merge(page: pg).to_query}" } %>
+  <nav class="flex items-center justify-center gap-2 mt-8 text-sm">
+    <% if @page > 1 %><%= link_to "← Anterior", page_url.call(@page - 1), class: "border rounded-full px-3 py-1.5 hover:bg-pink-50" %><% end %>
+    <span class="text-gray-500">Página <%= @page %> / <%= @total_pages %> (<%= @count %> produtos)</span>
+    <% if @page < @total_pages %><%= link_to "Próxima →", page_url.call(@page + 1), class: "border rounded-full px-3 py-1.5 hover:bg-pink-50" %><% end %>
+  </nav>
+<% end %>

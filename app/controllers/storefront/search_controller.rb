@@ -10,8 +10,12 @@ module Storefront
                      .where("lower(spree_products.name) LIKE :l OR lower(spree_products.description) LIKE :l OR lower(spree_variants.sku) LIKE :l", l: like)
                      .distinct
       end
-      @products = apply_sort(scope).limit(120)
-      @count = @products.size
+      @page = [params[:page].to_i, 1].max
+      per = 24
+      @count = scope.count
+      @total_pages = [(@count.to_f / per).ceil, 1].max
+      @page = [@page, @total_pages].min
+      @products = apply_sort(scope).includes(variants_including_master: :images).limit(per).offset((@page - 1) * per)
     end
 
     private
