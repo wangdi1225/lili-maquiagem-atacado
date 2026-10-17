@@ -1,5 +1,7 @@
 # Lili Maquiagem Atacado — 彩妆批发单店系统
 
+> **私有仓库**:https://github.com/wangdi1225/lili-maquiagem-atacado (PRIVATE,仅协作者可见)
+>
 > **交接/运维请看 [`docs/HANDOFF.md`](docs/HANDOFF.md)**:架构详解、功能清单、
 > 生产部署与运维手册、故障排查、维护者上手指南。
 
