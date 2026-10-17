@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <title>Entrar — Lili Maquiagem Atacado Admin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <%= csrf_meta_tags %>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center">
+  <div class="bg-white rounded-2xl shadow p-8 w-full max-w-sm">
+    <h1 class="text-xl font-extrabold text-pink-600 mb-1">💄 Lili Maquiagem</h1>
+    <p class="text-sm text-gray-500 mb-6">Painel administrativo — entre com sua conta</p>
+    <% if flash[:alert] %><div class="mb-4 text-sm bg-red-100 text-red-700 rounded px-3 py-2"><%= flash[:alert] %></div><% end %>
+    <% if flash[:notice] %><div class="mb-4 text-sm bg-green-100 text-green-700 rounded px-3 py-2"><%= flash[:notice] %></div><% end %>
+    <%= form_with url: "/user/spree_user/sign_in", scope: :spree_user, method: :post, class: "space-y-4" do |f| %>
+      <label class="block text-sm font-medium">E-mail
+        <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "mt-1 w-full border rounded-lg px-3 py-2" %></label>
+      <label class="block text-sm font-medium">Senha
+        <%= f.password_field :password, autocomplete: "current-password", class: "mt-1 w-full border rounded-lg px-3 py-2" %></label>
+      <label class="flex items-center gap-2 text-sm text-gray-600"><%= f.check_box :remember_me %> Manter conectado</label>
+      <%= f.submit "Entrar", class: "w-full bg-pink-600 text-white font-bold py-2.5 rounded-full hover:bg-pink-700 cursor-pointer" %>
+    <% end %>
+    <p class="text-xs text-gray-400 mt-4 text-center"><a href="/user/spree_user/password/new" class="hover:text-pink-600">Esqueci minha senha</a></p>
+  </div>
+</body>
+</html>

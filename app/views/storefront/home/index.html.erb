@@ -1,0 +1,23 @@
+<% content_for(:title) { "Maquiagem por Atacado" } %>
+<section class="bg-gradient-to-r from-pink-500 to-rose-400 text-white rounded-2xl p-8 mb-8">
+  <h1 class="text-3xl font-extrabold mb-2">Maquiagem por atacado para lojistas</h1>
+  <p class="opacity-90 mb-4">Barras e kits com preço de revenda. Pedido mínimo de <%= brl(wholesale_min_total) %>. Atendimento direto pelo WhatsApp.</p>
+  <div class="flex gap-3 flex-wrap">
+    <%= link_to "Ver produtos", "#produtos", class: "bg-white text-pink-600 font-semibold px-4 py-2 rounded-full text-sm hover:bg-pink-50" %>
+    <a href="https://wa.me/<%= default_whatsapp %>" target="_blank" rel="noopener" class="bg-green-600 text-white font-semibold px-4 py-2 rounded-full text-sm hover:bg-green-700">Tirar dúvidas no WhatsApp</a>
+  </div>
+</section>
+
+<% if @taxons.any? %>
+  <h2 class="text-lg font-bold mb-3">Categorias</h2>
+  <div class="flex gap-2 flex-wrap mb-8">
+    <% @taxons.each do |t| %>
+      <%= link_to t.name, storefront_taxon_path(slug: t.slug.sub(/^[^\/]+\//, '')), class: "bg-white border border-pink-200 text-pink-700 px-3 py-1.5 rounded-full text-sm hover:bg-pink-50" %>
+    <% end %>
+  </div>
+<% end %>
+
+<h2 id="produtos" class="text-lg font-bold mb-3">Produtos em destaque</h2>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+  <%= render partial: "storefront/shared/product_card", collection: @products, as: :product %>
+</div>

@@ -1,0 +1,52 @@
+<% content_for(:title) { "Carrinho" } %>
+<h1 class="text-2xl font-bold mb-4">Carrinho de compra</h1>
+<% if current_order.nil? || current_order.line_items.empty? %>
+  <div class="bg-white rounded-xl p-8 text-center shadow-sm">
+    <p class="text-gray-500 mb-4">Seu carrinho está vazio.</p>
+    <%= link_to "Ver produtos", root_path, class: "bg-pink-600 text-white px-4 py-2 rounded-full text-sm hover:bg-pink-700" %>
+  </div>
+<% else %>
+  <% remaining = wholesale_min_total - current_order.item_total %>
+  <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+    <table class="w-full text-sm">
+      <thead class="bg-gray-50 text-left text-gray-500">
+        <tr><th class="p-3">Produto</th><th class="p-3">Opção</th><th class="p-3">Preço</th><th class="p-3">Qtd.</th><th class="p-3">Subtotal</th><th class="p-3"></th></tr>
+      </thead>
+      <tbody class="divide-y">
+        <% current_order.line_items.each do |li| %>
+          <tr>
+            <td class="p-3"><%= link_to li.name, storefront_product_path(slug: li.product.slug), class: "hover:text-pink-600" %></td>
+            <td class="p-3 text-gray-500"><%= variant_label(li.variant) %></td>
+            <td class="p-3"><%= brl(li.price) %></td>
+            <td class="p-3">
+              <%= form_with url: "/cart/update", method: :patch, class: "flex gap-1" do |f| %>
+                <%= f.hidden_field :line_item_id, value: li.id %>
+                <%= f.number_field :quantity, value: li.quantity, min: 0, class: "w-16 border rounded px-2 py-1" %>
+                <%= f.submit "OK", class: "bg-gray-100 border rounded px-2 py-1 hover:bg-gray-200 cursor-pointer" %>
+              <% end %>
+            </td>
+            <td class="p-3 font-semibold"><%= brl(li.price * li.quantity) %></td>
+            <td class="p-3">
+              <%= button_to "✕", storefront_cart_remove_path(id: li.id), method: :delete, class: "text-gray-400 hover:text-red-600 cursor-pointer" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+      <tfoot>
+        <tr class="bg-gray-50 font-bold">
+          <td colspan="4" class="p-3 text-right">Total</td>
+          <td class="p-3 text-pink-600"><%= brl(current_order.item_total) %></td>
+          <td></td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+  <div class="mt-4 flex items-center gap-4 flex-wrap">
+    <% if remaining > 0 %>
+      <p class="text-sm text-amber-700 bg-amber-100 px-3 py-2 rounded">Faltam <%= brl(remaining) %> para atingir o pedido mínimo de <%= brl(wholesale_min_total) %>.</p>
+    <% else %>
+      <%= link_to "Finalizar pedido →", storefront_checkout_path, class: "bg-pink-600 text-white px-5 py-2.5 rounded-full font-semibold hover:bg-pink-700" %>
+    <% end %>
+    <%= link_to "Continuar comprando", root_path, class: "text-sm text-gray-500 hover:text-pink-600" %>
+  </div>
+<% end %>

@@ -1,0 +1,13 @@
+<% content_for(:title) { "Pedido enviado" } %>
+<div class="max-w-xl mx-auto bg-white rounded-2xl shadow-sm p-8 text-center">
+  <div class="text-5xl mb-3">✅</div>
+  <h1 class="text-2xl font-bold mb-2">Pedido #<%= @order.number %> registrado!</h1>
+  <p class="text-gray-600 text-sm mb-6">Agora envie o resumo do pedido para o nosso time no WhatsApp. Combinaremos o pagamento (PIX/transferência) e a entrega por lá.</p>
+  <a href="https://wa.me/<%= @wa_number %>?text=<%= ERB::Util.url_encode(@wa_text) %>" target="_blank" rel="noopener"
+     class="inline-block bg-green-500 text-white font-bold px-6 py-3 rounded-full hover:bg-green-600 mb-4">
+    📲 Enviar pedido no WhatsApp
+  </a>
+  <p class="text-xs text-gray-400 mb-6">Atendente: <%= @client['vendedor'].presence || 'Sem preferência' %> — Número: +<%= @wa_number %></p>
+  <pre class="text-left text-xs bg-gray-50 rounded-lg p-4 overflow-auto max-h-64 mb-6"><%= @wa_text %></pre>
+  <%= link_to "Voltar à loja", root_path, class: "text-sm text-pink-600 hover:underline" %>
+</div>

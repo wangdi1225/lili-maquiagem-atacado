@@ -1,0 +1,33 @@
+<% content_for(:title) { "Finalizar pedido" } %>
+<h1 class="text-2xl font-bold mb-4">Dados do pedido</h1>
+<div class="grid md:grid-cols-3 gap-6">
+  <%= form_with url: "/checkout", method: :post, class: "md:col-span-2 bg-white rounded-xl shadow-sm p-6 space-y-4" do |f| %>
+    <div class="grid md:grid-cols-2 gap-4">
+      <label class="block text-sm">Nome do comprador*
+        <%= f.text_field :name, required: true, class: "mt-1 w-full border rounded px-3 py-2" %></label>
+      <label class="block text-sm">Empresa (razão social)*
+        <%= f.text_field :company, required: true, class: "mt-1 w-full border rounded px-3 py-2" %></label>
+      <label class="block text-sm">CNPJ* (somente números)
+        <%= f.text_field :cnpj, required: true, inputmode: "numeric", placeholder: "12.345.678/0001-90", class: "mt-1 w-full border rounded px-3 py-2" %></label>
+      <label class="block text-sm">Telefone / WhatsApp*
+        <%= f.telephone_field :phone, required: true, placeholder: "(11) 99999-9999", class: "mt-1 w-full border rounded px-3 py-2" %></label>
+    </div>
+    <label class="block text-sm">Endereço de entrega (rua, número, bairro, cidade/UF, CEP)
+      <%= f.text_area :address, rows: 2, class: "mt-1 w-full border rounded px-3 py-2" %></label>
+    <label class="block text-sm">Vendedor(a) de atendimento
+      <%= f.select :seller, options_for_select([["Sem preferência", ""]] + salespeople.map { |s| [s[:name], s[:name]] }), {}, class: "mt-1 w-full border rounded px-3 py-2" %></label>
+    <label class="block text-sm">Observações
+      <%= f.text_area :notes, rows: 2, class: "mt-1 w-full border rounded px-3 py-2" %></label>
+    <p class="text-xs text-gray-500">Sem pagamento online: após enviar o pedido, você confirma o pagamento (PIX/transferência) direto com nosso time pelo WhatsApp.</p>
+    <%= f.submit "Enviar pedido", class: "w-full bg-pink-600 text-white font-bold py-3 rounded-full hover:bg-pink-700 cursor-pointer" %>
+  <% end %>
+  <aside class="bg-white rounded-xl shadow-sm p-6 h-fit">
+    <h2 class="font-bold mb-3">Resumo</h2>
+    <ul class="text-sm space-y-1 mb-3">
+      <% current_order.line_items.each do |li| %>
+        <li class="flex justify-between gap-2"><span><%= li.quantity %>× <%= li.name %> (<%= variant_label(li.variant) %>)</span><span class="whitespace-nowrap"><%= brl(li.price * li.quantity) %></span></li>
+      <% end %>
+    </ul>
+    <p class="flex justify-between font-bold border-t pt-2"><span>Total</span><span class="text-pink-600"><%= brl(current_order.item_total) %></span></p>
+  </aside>
+</div>
