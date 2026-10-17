@@ -27,5 +27,15 @@ module Storefront
       session[:order_id] = @current_order.id
       @current_order
     end
+
+    # 商品列表/详情统一预加载，消除图片/价格/品牌/变体的 N+1。
+    def with_product_preloads(scope)
+      scope.includes(
+        primary_media: { attachment_attachment: :blob },
+        media: { attachment_attachment: :blob },
+        taxons: :taxonomy,
+        variants_including_master: :prices
+      )
+    end
   end
 end

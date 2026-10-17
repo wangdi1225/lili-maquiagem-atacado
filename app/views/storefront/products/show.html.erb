@@ -1,12 +1,35 @@
 <% content_for(:title) { @product.name } %>
+<% media_list = product_media(@product) %>
 <nav class="text-sm text-gray-500 mb-3">
   <%= link_to "Início", root_path %> ›
   <% if (t = @product.taxons.first) %><%= link_to t.name, storefront_taxon_path(slug: t.slug.sub(/^[^\/]+\//, '')) %> ›<% end %>
   <%= @product.name %>
 </nav>
 <div class="grid md:grid-cols-2 gap-8 bg-white rounded-2xl shadow-sm p-6">
-  <div>
-    <%= product_image(@product, css: "w-full rounded-xl object-cover aspect-square") %>
+  <div id="product-gallery" data-gallery>
+    <% if media_list.any? %>
+      <div id="gallery-main" class="mb-3">
+        <%= render_media_image(media_list.first, media_list.first.alt.presence || @product.name,
+              css: "w-full rounded-xl object-cover aspect-square bg-white",
+              size: :large, eager: true,
+              sizes_attr: "(max-width: 768px) 100vw, 560px",
+              html: { data: { gallery_main: true } }) %>
+      </div>
+      <% if media_list.size > 1 %>
+        <div class="grid grid-cols-4 gap-2">
+          <% media_list.each_with_index do |m, i| %>
+            <button type="button" data-gallery-thumb
+                    data-full="<%= main_app.rails_representation_path(media_variant(m, :large)) %>"
+                    aria-label="Ver imagem <%= i + 1 %>"
+                    class="gallery-thumb rounded-lg overflow-hidden ring-2 <%= i.zero? ? 'ring-pink-500' : 'ring-transparent hover:ring-pink-300' %>">
+              <%= render_media_image(m, @product.name, css: "w-full aspect-square object-cover bg-white", size: :small, sizes_attr: "120px") %>
+            </button>
+          <% end %>
+        </div>
+      <% end %>
+    <% else %>
+      <%= product_image(@product, css: "w-full rounded-xl object-cover aspect-square") %>
+    <% end %>
   </div>
   <div class="lg:sticky lg:top-4 self-start">
     <h1 class="text-2xl font-bold mb-2"><%= @product.name %></h1>
@@ -33,7 +56,7 @@
         <div class="p-3 flex items-center gap-3">
           <div class="flex-1">
             <p class="text-sm font-medium"><%= variant_label(v) %></p>
-            <p class="text-pink-600 font-bold"><%= brl(v.price || 0) %></p>
+            <p class="text-pink-600 font-bold"><%= brl(variant_price(v) || 0) %></p>
           </div>
           <%= form_with url: "/cart/add", method: :post, class: "flex items-center gap-2" do |f| %>
             <%= f.hidden_field :variant_id, value: v.id %>
@@ -48,3 +71,26 @@
     <a href="https://wa.me/<%= default_whatsapp %>?text=<%= ERB::Util.url_encode("Olá! Tenho interesse no produto: #{@product.name}") %>" target="_blank" rel="noopener" class="inline-block mt-3 bg-green-500 text-white text-sm px-4 py-2 rounded-full hover:bg-green-600">Perguntar sobre este produto</a>
   </div>
 </div>
+
+<% if media_list.size > 1 %>
+<script>
+  (function () {
+    var root = document.getElementById('product-gallery');
+    if (!root) return;
+    var main = root.querySelector('[data-gallery-main]');
+    root.querySelectorAll('[data-gallery-thumb]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var full = btn.getAttribute('data-full');
+        if (main) {
+          main.setAttribute('src', full);
+          main.removeAttribute('srcset');
+        }
+        root.querySelectorAll('.gallery-thumb').forEach(function (t) {
+          t.classList.remove('ring-pink-500'); t.classList.add('ring-transparent');
+        });
+        btn.classList.add('ring-pink-500'); btn.classList.remove('ring-transparent');
+      });
+    });
+  })();
+</script>
+<% end %>

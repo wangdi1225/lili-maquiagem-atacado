@@ -1,7 +1,7 @@
-<% quick_variant = product.variants.order(:position).first || product.master %>
+<% quick_variant = quick_add_variant(product) %>
 <div class="relative bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition">
   <%= link_to storefront_product_path(slug: product.slug), class: "block" do %>
-    <%= product_image(product) %>
+    <%= product_image(product, size: :medium, css: "w-full h-48 object-cover") %>
     <div class="p-3 pr-12">
       <% if (b = brand_of(product)) %><span class="inline-block text-[10px] uppercase tracking-wide bg-pink-50 text-pink-700 border border-pink-100 rounded px-1.5 py-0.5 mb-1"><%= b.name %></span><% end %>
       <p class="text-sm font-medium line-clamp-2 h-10"><%= product.name %></p>

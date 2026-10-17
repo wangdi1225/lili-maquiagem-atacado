@@ -112,3 +112,70 @@ config.x.whatsapp.salespeople    = [...]          # 销售员名单(结账可选
 - 无运费计算/物流对接(线下沟通)
 - 订单停留在 cart 状态由店长人工推进
 - 商品图为占位符(后台上传即显示)
+
+---
+
+## 7. 阿里云 ECS 生产部署与发布流程（当前环境）
+
+### 7.1 环境信息
+
+| 项 | 值 |
+|---|---|
+| 云厂商 / 地域 | 阿里云 · 美国（弗吉尼亚）us-east-1 |
+| 实例 | ecs.e-c1m1.large（经济型 e，2 vCPU / 2 GiB，x86 Intel），包月，到期见控制台 |
+| 公网 IP | 8.221.115.197 |
+| 系统 / 登录 | Ubuntu 24.04 LTS，root（密钥 `~/.ssh/ecs_deploy`，密码见私有记录） |
+| 临时预览域名 | https://8-221-115-197.sslip.io （sslip.io 免费解析 + Let's Encrypt 证书，无需购买域名） |
+| 应用目录 | /var/www/wholesale_store |
+| 服务 | systemd `wholesale`（Puma :3000）+ nginx（80→301，443 反代） |
+| 数据库 | SQLite `storage/production.sqlite3`（首次由开发库复制而来） |
+| 环境变量 | /etc/wholesale/env（RAILS_ENV / SECRET_KEY_BASE / DEVISE_SECRET_KEY） |
+| 部署脚本 | 本地 `wholesale-deploy/deploy.sh`（首次）、`wholesale-deploy/release.sh`(日常发布) |
+
+### 7.2 首次部署（已完成；新机器照此执行）
+
+1. 购买 ECS：经济型 e 2C2G、Ubuntu 24.04、ESSD 20G、分配公网 IP、带宽按使用流量、安全组放行 22/80/443
+2. 本地生成密钥并推送公钥到服务器 `~/.ssh/authorized_keys`（或控制台重置密码）
+3. 上传代码：`bash wholesale-deploy/release.sh`
+4. 服务器执行：`bash /root/deploy.sh [域名]`
+   - 自动完成：装 Ruby/Nginx → 生成 SECRET_KEY_BASE/DEVISE_SECRET_KEY → bundle install → assets:precompile → systemd → nginx → certbot 证书（不传域名则自动用 `<IP>.sslip.io` 临时域名）
+5. 验证：`curl -skI https://8-221-115-197.sslip.io`
+
+### 7.3 日常发布（本地改完代码后，一条命令）
+
+```bash
+bash wholesale-deploy/release.sh
+```
+
+流程：rsync 增量同步（排除 .git/log/tmp）→ 远程 `rails assets:precompile` → `systemctl restart wholesale` → HTTPS 冒烟测试。
+
+### 7.4 常用运维命令（服务器上）
+
+```bash
+systemctl status wholesale            # 服务状态
+journalctl -u wholesale -f            # Puma 实时日志
+tail -f /var/www/wholesale_store/log/production.log   # 应用日志
+systemctl restart wholesale           # 重启
+nginx -t && systemctl reload nginx    # nginx 配置生效
+sqlite3 /var/www/wholesale_store/storage/production.sqlite3 ".backup /root/backup-$(date +%F).sqlite3"  # 数据库备份
+certbot renew --nginx                 # 手动续证书（平时由 systemd timer 自动续）
+```
+
+### 7.5 绑定正式域名
+
+1. 在域名 DNS 添加 A 记录：`@` 与 `www` → 8.221.115.197
+2. 服务器执行：
+   ```bash
+   sed -i 's/server_name .*;/server_name 你的域名;/' /etc/nginx/sites-available/wholesale
+   nginx -t && systemctl reload nginx
+   certbot --nginx -d 你的域名 --redirect --agree-tos -m you@example.com -n
+   ```
+3. 验证 https://你的域名
+
+### 7.6 已知坑（本次部署实际踩过，勿重复）
+
+1. **DEVISE_SECRET_KEY**：生产环境 `config/initializers/devise.rb` 强制 `ENV.fetch("DEVISE_SECRET_KEY")`，必须写入 /etc/wholesale/env。注意：不要手工 `cat >` 覆盖该 env 文件，会丢掉已生成的 key（deploy.sh 已改为保留已有 key）。
+2. **Spree 5.6 + eager_load**：生产 `eager_load = true` 会触发 `uninitialized constant Spree::Api::V2::BaseController`（spree_auth_devise 与 spree_api 引擎加载顺序问题）。本项目 `production.rb` 已设 `config.eager_load = false`，**勿改回 true**。
+3. **force_ssl**：production.rb 开启 force_ssl，HTTP 一律 301 到 HTTPS。没有证书时直接访问 IP 会失败——用 sslip.io 临时域名或正式域名 + certbot 解决，不要长期关 force_ssl。
+4. **SQLite 双库**：首次部署把 development.sqlite3 复制为 production.sqlite3，之后两库独立。改表结构用 `RAILS_ENV=production bin/rails db:migrate`。
+5. **内存**：2G 实例跑 Rails+Spree 偏紧，购买时已勾选"内存优化（Swap）"。若出现 OOM，加 swap 或升 4G。

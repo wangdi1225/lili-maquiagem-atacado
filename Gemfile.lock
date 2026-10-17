@@ -549,6 +549,7 @@ DEPENDENCIES
   brakeman
   capybara
   debug
+  image_processing (~> 1.2)
   importmap-rails
   jbuilder
   puma (>= 5.0)

@@ -18,7 +18,7 @@ module Storefront
       @count = @taxon.products.available.count
       @total_pages = [(@count.to_f / per).ceil, 1].max
       @page = [@page, @total_pages].min
-      @products = sorted.includes(variants_including_master: :images).limit(per).offset((@page - 1) * per)
+      @products = with_product_preloads(sorted).limit(per).offset((@page - 1) * per)
     end
   end
 end

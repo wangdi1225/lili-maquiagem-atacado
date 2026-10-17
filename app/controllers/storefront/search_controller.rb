@@ -15,7 +15,7 @@ module Storefront
       @count = scope.count
       @total_pages = [(@count.to_f / per).ceil, 1].max
       @page = [@page, @total_pages].min
-      @products = apply_sort(scope).includes(variants_including_master: :images).limit(per).offset((@page - 1) * per)
+      @products = with_product_preloads(apply_sort(scope)).limit(per).offset((@page - 1) * per)
     end
 
     private
