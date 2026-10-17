@@ -1,8 +1,16 @@
-<%= link_to storefront_product_path(slug: product.slug), class: "bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition block" do %>
-  <%= product_image(product) %>
-  <div class="p-3">
-    <p class="text-sm font-medium line-clamp-2 h-10"><%= product.name %></p>
-    <p class="text-pink-600 font-bold mt-1"><%= brl(product_min_price(product)) %></p>
-    <p class="text-xs text-gray-400">preço por barra/kit</p>
-  </div>
-<% end %>
+<% quick_variant = product.variants.order(:position).first || product.master %>
+<div class="relative bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition">
+  <%= link_to storefront_product_path(slug: product.slug), class: "block" do %>
+    <%= product_image(product) %>
+    <div class="p-3 pr-12">
+      <p class="text-sm font-medium line-clamp-2 h-10"><%= product.name %></p>
+      <p class="text-pink-600 font-bold mt-1"><%= brl(product_min_price(product)) %></p>
+      <p class="text-xs text-gray-400">preço por barra/kit</p>
+    </div>
+  <% end %>
+  <%= form_with url: "/cart/add", method: :post, class: "absolute bottom-3 right-3" do |f| %>
+    <%= f.hidden_field :variant_id, value: quick_variant.id %>
+    <%= f.hidden_field :quantity, value: 1 %>
+    <%= f.submit "+", title: "Adicionar 1 ao carrinho", class: "w-9 h-9 rounded-full bg-pink-600 text-white text-xl font-bold cursor-pointer hover:bg-pink-700 leading-none" %>
+  <% end %>
+</div>

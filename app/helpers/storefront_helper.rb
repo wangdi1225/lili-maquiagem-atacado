@@ -31,6 +31,20 @@ module StorefrontHelper
     end
   end
 
+  def whatsapp_quote_link(order)
+    money = ->(v) { number_to_currency(v.to_f, locale: :'pt-BR', unit: 'R$', separator: ',', delimiter: '.', format: '%u %n') }
+    lines = ["*Cotação de pedido* (atacado)"]
+    order.line_items.each do |li|
+      opts = li.variant.option_values.map(&:presentation).join('/')
+      opts = opts.present? ? " (#{opts})" : ""
+      lines << "• #{li.quantity}x #{li.name}#{opts} — #{money.call(li.price * li.quantity)}"
+    end
+    lines << ""
+    lines << "*Total estimado: #{money.call(order.item_total)}*"
+    lines << "(pedido mínimo #{money.call(wholesale_min_total)} — gostaria de fechar esta cotação?)"
+    "https://wa.me/#{default_whatsapp}?text=#{ERB::Util.url_encode(lines.join("\n"))}"
+  end
+
   def product_min_price(product)
     prices = ([product.master&.price] + product.variants.map(&:price)).compact
     prices.min || 0

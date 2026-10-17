@@ -41,12 +41,25 @@
       </tfoot>
     </table>
   </div>
-  <div class="mt-4 flex items-center gap-4 flex-wrap">
-    <% if remaining > 0 %>
-      <p class="text-sm text-amber-700 bg-amber-100 px-3 py-2 rounded">Faltam <%= brl(remaining) %> para atingir o pedido mínimo de <%= brl(wholesale_min_total) %>.</p>
-    <% else %>
-      <%= link_to "Finalizar pedido →", storefront_checkout_path, class: "bg-pink-600 text-white px-5 py-2.5 rounded-full font-semibold hover:bg-pink-700" %>
-    <% end %>
-    <%= link_to "Continuar comprando", root_path, class: "text-sm text-gray-500 hover:text-pink-600" %>
+  <div class="mt-4 bg-white rounded-xl shadow-sm p-4">
+    <% pct = [(current_order.item_total / wholesale_min_total * 100), 100].min %>
+    <div class="flex justify-between text-xs text-gray-500 mb-1">
+      <span>Progresso do pedido mínimo</span>
+      <span><%= brl(current_order.item_total) %> / <%= brl(wholesale_min_total) %></span>
+    </div>
+    <div class="w-full bg-gray-100 rounded-full h-2 mb-4">
+      <div class="bg-pink-500 h-2 rounded-full" style="width: <%= pct %>%"></div>
+    </div>
+    <div class="flex items-center gap-3 flex-wrap">
+      <% if remaining > 0 %>
+        <p class="text-sm text-amber-700 bg-amber-100 px-3 py-2 rounded">Faltam <%= brl(remaining) %> para atingir o pedido mínimo de <%= brl(wholesale_min_total) %> e liberar o checkout.</p>
+        <a href="<%= whatsapp_quote_link(current_order) %>" target="_blank" rel="noopener" class="bg-green-500 text-white px-4 py-2.5 rounded-full font-semibold hover:bg-green-600">📲 Enviar carrinho como cotação no WhatsApp</a>
+      <% else %>
+        <%= link_to "Finalizar pedido →", storefront_checkout_path, class: "bg-pink-600 text-white px-5 py-2.5 rounded-full font-semibold hover:bg-pink-700" %>
+        <a href="<%= whatsapp_quote_link(current_order) %>" target="_blank" rel="noopener" class="text-sm text-green-700 hover:underline">ou enviar como cotação no WhatsApp</a>
+      <% end %>
+      <%= link_to "Continuar comprando", root_path, class: "text-sm text-gray-500 hover:text-pink-600" %>
+    </div>
+    <p class="text-xs text-gray-400 mt-3">Sem pagamento online: o pedido/cotação é confirmado pelo nosso time no WhatsApp (PIX/transferência).</p>
   </div>
 <% end %>

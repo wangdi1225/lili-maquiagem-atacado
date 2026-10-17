@@ -125,10 +125,14 @@ Devise mapping :spree_user (路由 /user/spree_user/sign_in, 由 spree_auth_devi
 | 分类列表 | `/t/:slug` | `storefront/taxons#show`(按 permalink 匹配) |
 | 商品详情(色号变体逐行加购) | `/products/:slug` | `storefront/products#show` |
 | 购物车(改量/删除/合计) | `/cart`, `POST /cart/add`, `PATCH /cart/update`, `DELETE /cart/remove/:id` | `storefront/cart#*`,调用 `Spree::Cart::AddItem/SetQuantity/RemoveLineItem` 服务 |
-| 起订额拦截 | 购物车页提示 "Faltam R$ x";`/checkout` GET 未达标 302 回购物车 | `config.x.wholesale.min_total` |
+| 起订额拦截 | 购物车页进度条+提示;`/checkout` GET 未达标 302 回购物车;**同时提供 WhatsApp 报价出口** | `config.x.wholesale.min_total` |
 | 结账表单(CNPJ 14 位校验等) | `GET/POST /checkout` | `storefront/checkout#new/create` |
 | 订单完成页 + WhatsApp 深链 | `/pedido/:number` | `storefront/checkout#complete`(wa.me + URL-encoded 订单摘要) |
 | 占位商品图(无图时 💄 色块) | — | `StorefrontHelper#product_image` |
+| 商品卡快捷加购("+" 按钮,加 1 件首变体) | 首页/分类网格 | `_product_card.html.erb` |
+| 悬浮迷你购物车条(数量/合计/去结算或报价) | 全站底部 | `_mini_cart.html.erb`(布局渲染) |
+| 未达起订额时的**WhatsApp 报价通道**(cotação) | 购物车页/悬浮条 | `StorefrontHelper#whatsapp_quote_link` |
+| 起订额进度条 | 购物车页 | `cart/show.html.erb` |
 
 ### 3.2 后台(Spree Admin,需登录)
 

@@ -1,0 +1,19 @@
+<% if current_order && current_order.line_items.any? %>
+  <% remaining = wholesale_min_total - current_order.item_total %>
+  <div class="fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur border-t border-pink-200 shadow-[0_-4px_12px_rgba(0,0,0,0.06)]">
+    <div class="max-w-6xl mx-auto px-4 py-2.5 flex items-center gap-3 flex-wrap">
+      <span class="text-sm">🛒 <b><%= current_order.line_items.sum(:quantity) %></b> item(ns) • <b class="text-pink-600"><%= brl(current_order.item_total) %></b></span>
+      <% if remaining > 0 %>
+        <span class="text-xs text-amber-700">faltam <%= brl(remaining) %> p/ pedido mínimo</span>
+      <% end %>
+      <div class="ml-auto flex gap-2">
+        <%= link_to "Ver carrinho", storefront_cart_path, class: "text-sm border border-pink-300 text-pink-700 px-3 py-1.5 rounded-full hover:bg-pink-50" %>
+        <% if remaining > 0 %>
+          <a href="<%= whatsapp_quote_link(current_order) %>" target="_blank" rel="noopener" class="text-sm bg-green-500 text-white px-3 py-1.5 rounded-full hover:bg-green-600">📲 Cotação via WhatsApp</a>
+        <% else %>
+          <%= link_to "Finalizar pedido →", storefront_checkout_path, class: "text-sm bg-pink-600 text-white px-3 py-1.5 rounded-full hover:bg-pink-700 font-semibold" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>

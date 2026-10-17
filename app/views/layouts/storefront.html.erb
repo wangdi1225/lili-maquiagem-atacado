@@ -26,7 +26,7 @@
     </div>
   </div>
 </header>
-<main class="max-w-6xl mx-auto px-4 py-6">
+<main class="max-w-6xl mx-auto px-4 py-6 pb-24">
   <% flash.each do |type, msg| %>
     <div class="mb-4 px-4 py-3 rounded text-sm <%= type.to_s == 'alert' || type.to_s == 'error' ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800' %>"><%= msg %></div>
   <% end %>
@@ -39,5 +39,6 @@
     <a href="https://wa.me/<%= default_whatsapp %>" target="_blank" rel="noopener" class="bg-green-500 text-white px-3 py-1.5 rounded-full hover:bg-green-600">Falar no WhatsApp</a>
   </div>
 </footer>
+<%= render partial: "storefront/shared/mini_cart" %>
 </body>
 </html>
