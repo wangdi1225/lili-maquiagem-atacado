@@ -41,6 +41,20 @@ module Storefront
       redirect_to storefront_cart_path
     end
 
+    def set
+      order = ensure_order!
+      item = order.line_items.find(params[:id])
+      qty = [params[:qty].to_i, 0].max
+      result = if qty <= 0
+        Spree::Cart::RemoveLineItem.call(order: order, line_item: item)
+      else
+        Spree::Cart::SetQuantity.call(order: order, line_item: item, quantity: qty)
+      end
+      redirect_to storefront_cart_path
+    rescue StandardError
+      redirect_to storefront_cart_path
+    end
+
     def remove
       order = ensure_order!
       item = order.line_items.find(params[:id])

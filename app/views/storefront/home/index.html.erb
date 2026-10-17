@@ -17,6 +17,22 @@
   </div>
 <% end %>
 
+<section class="grid md:grid-cols-3 gap-4 mb-8">
+  <div class="bg-white rounded-xl p-4 shadow-sm"><p class="text-2xl mb-1">🏷️</p><p class="font-semibold text-sm">Preço de revenda</p><p class="text-xs text-gray-500">Barras e kits fechados com margem para sua loja.</p></div>
+  <div class="bg-white rounded-xl p-4 shadow-sm"><p class="text-2xl mb-1">📦</p><p class="font-semibold text-sm">Pedido mínimo <%= brl(wholesale_min_total) %></p><p class="text-xs text-gray-500">Monte o carrinho; abaixo disso, envie como cotação.</p></div>
+  <div class="bg-white rounded-xl p-4 shadow-sm"><p class="text-2xl mb-1">📲</p><p class="font-semibold text-sm">Pedido pelo WhatsApp</p><p class="text-xs text-gray-500">Sem pagamento online: PIX/transferência combinados no atendimento.</p></div>
+</section>
+
+<% marcas = Spree::Taxonomy.find_by(name: 'Marcas')&.root&.children || [] %>
+<% if marcas.any? %>
+  <h2 class="text-lg font-bold mb-3">Marcas</h2>
+  <div class="flex gap-2 flex-wrap mb-8">
+    <% marcas.each do |m| %>
+      <%= link_to m.name, storefront_taxon_path(slug: m.permalink.sub(/^[^\/]+\//, '')), class: "bg-white border border-gray-200 text-gray-700 px-3 py-1.5 rounded-full text-sm hover:border-pink-300 hover:text-pink-700" %>
+    <% end %>
+  </div>
+<% end %>
+
 <h2 id="produtos" class="text-lg font-bold mb-3">Produtos em destaque</h2>
 <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
   <%= render partial: "storefront/shared/product_card", collection: @products, as: :product %>

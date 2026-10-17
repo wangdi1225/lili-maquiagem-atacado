@@ -8,10 +8,24 @@
   <div>
     <%= product_image(@product, css: "w-full rounded-xl object-cover aspect-square") %>
   </div>
-  <div>
+  <div class="lg:sticky lg:top-4 self-start">
     <h1 class="text-2xl font-bold mb-2"><%= @product.name %></h1>
+    <div class="flex items-center gap-2 flex-wrap mb-3">
+      <span class="text-xs text-gray-400">COD: <%= @product.sku %></span>
+      <% @product.taxons.each do |t| %>
+        <%= link_to t.name, storefront_taxon_path(slug: t.permalink.sub(/^[^\/]+\//, '')), class: "text-[11px] bg-gray-100 text-gray-600 rounded-full px-2 py-0.5 hover:bg-pink-50 hover:text-pink-700" %>
+      <% end %>
+    </div>
     <p class="text-gray-600 text-sm mb-4 whitespace-pre-line"><%= @product.description %></p>
-    <p class="text-xs text-gray-400 mb-4">SKU base: <%= @product.sku %></p>
+    <table class="w-full text-sm border rounded-lg overflow-hidden mb-4">
+      <tbody class="divide-y">
+        <tr class="bg-gray-50"><td class="px-3 py-1.5 text-gray-500">Preço por barra/kit</td><td class="px-3 py-1.5 font-semibold text-pink-600"><%= brl(product_min_price(@product)) %></td></tr>
+        <% if (n = pack_unit_count(@product)) && (up = unit_price(@product)) %>
+          <tr><td class="px-3 py-1.5 text-gray-500">Preço por unidade</td><td class="px-3 py-1.5"><%= brl(up) %> (<%= n %> un por barra)</td></tr>
+        <% end %>
+        <tr class="bg-gray-50"><td class="px-3 py-1.5 text-gray-500">Pedido mínimo</td><td class="px-3 py-1.5"><%= brl(wholesale_min_total) %> por compra</td></tr>
+      </tbody>
+    </table>
 
     <h2 class="font-semibold mb-2">Opções e preços (atacado)</h2>
     <div class="divide-y border rounded-lg">

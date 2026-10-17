@@ -45,6 +45,22 @@ module StorefrontHelper
     "https://wa.me/#{default_whatsapp}?text=#{ERB::Util.url_encode(lines.join("\n"))}"
   end
 
+  # Extrai quantidade do pack ("Barra com 24 un", "Caixa com 12 un", "12 peças"...)
+  def pack_unit_count(product)
+    m = product.name.to_s.match(/(\d+)\s*(?:un|pcs|pe[cç]as?|kits?)\b/i)
+    m && m[1].to_i.positive? ? m[1].to_i : nil
+  end
+
+  def unit_price(product)
+    n = pack_unit_count(product)
+    price = product_min_price(product)
+    n && price > 0 ? (price / n).round(2) : nil
+  end
+
+  def brand_of(product)
+    product.taxons.joins(:taxonomy).find_by(spree_taxonomies: { name: 'Marcas' })
+  end
+
   def product_min_price(product)
     prices = ([product.master&.price] + product.variants.map(&:price)).compact
     prices.min || 0

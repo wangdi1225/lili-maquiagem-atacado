@@ -133,6 +133,13 @@ Devise mapping :spree_user (路由 /user/spree_user/sign_in, 由 spree_auth_devi
 | 悬浮迷你购物车条(数量/合计/去结算或报价) | 全站底部 | `_mini_cart.html.erb`(布局渲染) |
 | 未达起订额时的**WhatsApp 报价通道**(cotação) | 购物车页/悬浮条 | `StorefrontHelper#whatsapp_quote_link` |
 | 起订额进度条 | 购物车页 | `cart/show.html.erb` |
+| 站内搜索(名称/SKU/描述)+ 结果排序 | `/buscar?q=` | `storefront/search#show` |
+| 分类页排序(名称/价格升降)+ 结果计数 | `/t/:slug?sort=` | `storefront/taxons#show` |
+| 商品卡品牌徽章 + 单价换算(≈ R$ x/un) | 网格卡片 | `StorefrontHelper#pack_unit_count/#unit_price/#brand_of` |
+| 商品页 COD/分类徽章/价格属性表(条价/单价/起订)/桌面吸顶购买区 | `/products/:slug` | `products/show.html.erb` |
+| 购物车 −/+ 步进链接 | `/cart/set/:id/:qty` | `storefront/cart#set` |
+| 购物车交叉销售"Complete seu pedido"(最便宜 4 款助达起订额) | 购物车页 | `cart/show.html.erb` |
+| 首页品牌条 + 批发流程三卡(价格/起订/WhatsApp) | `/` | `home/index.html.erb` |
 
 ### 3.2 后台(Spree Admin,需登录)
 

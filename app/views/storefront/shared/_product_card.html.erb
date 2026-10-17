@@ -3,9 +3,12 @@
   <%= link_to storefront_product_path(slug: product.slug), class: "block" do %>
     <%= product_image(product) %>
     <div class="p-3 pr-12">
+      <% if (b = brand_of(product)) %><span class="inline-block text-[10px] uppercase tracking-wide bg-pink-50 text-pink-700 border border-pink-100 rounded px-1.5 py-0.5 mb-1"><%= b.name %></span><% end %>
       <p class="text-sm font-medium line-clamp-2 h-10"><%= product.name %></p>
       <p class="text-pink-600 font-bold mt-1"><%= brl(product_min_price(product)) %></p>
-      <p class="text-xs text-gray-400">preço por barra/kit</p>
+      <p class="text-xs text-gray-400">
+        <% if (up = unit_price(product)) %>≈ <%= brl(up) %>/un · <%= pack_unit_count(product) %> un<% else %>preço por barra/kit<% end %>
+      </p>
     </div>
   <% end %>
   <%= form_with url: "/cart/add", method: :post, class: "absolute bottom-3 right-3" do |f| %>

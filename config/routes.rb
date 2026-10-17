@@ -2,6 +2,8 @@ Rails.application.routes.draw do
   # Storefront (custom, minimal — catalog + cart + WhatsApp checkout)
   root "storefront/home#index"
 
+  get  "/buscar",               to: "storefront/search#show",   as: :storefront_search
+  get  "/cart/set/:id/:qty",    to: "storefront/cart#set",      as: :storefront_cart_set
   get  "/t/:slug",              to: "storefront/taxons#show",    as: :storefront_taxon
   get  "/products/:slug",       to: "storefront/products#show",  as: :storefront_product
   get  "/cart",                 to: "storefront/cart#show",      as: :storefront_cart

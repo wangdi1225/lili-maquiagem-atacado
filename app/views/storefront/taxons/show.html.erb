@@ -2,7 +2,13 @@
 <nav class="text-sm text-gray-500 mb-3">
   <%= link_to "Início", root_path %> › <%= @taxon.name %>
 </nav>
-<h1 class="text-2xl font-bold mb-4"><%= @taxon.name %></h1>
+<div class="flex items-center gap-3 flex-wrap mb-4">
+  <h1 class="text-2xl font-bold"><%= @taxon.name %></h1>
+  <span class="text-sm text-gray-400"><%= @count %> produto(s)</span>
+  <%= form_with url: storefront_taxon_path(slug: params[:slug]), method: :get, class: "ml-auto flex items-center gap-2" do |f| %>
+    <%= f.select :sort, options_for_select([["Ordenar: nome", "name"], ["Menor preço", "price_asc"], ["Maior preço", "price_desc"]], @sort), {}, class: "border rounded-full px-3 py-1.5 text-sm bg-white", onchange: "this.form.requestSubmit()" %>
+  <% end %>
+</div>
 <% if @products.any? %>
   <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
     <%= render partial: "storefront/shared/product_card", collection: @products, as: :product %>
