@@ -376,7 +376,7 @@ GEM
     rubyzip (3.7.0)
     safely_block (1.0.0)
     securerandom (0.4.1)
-    selenium-webdriver (4.51.0)
+    selenium-webdriver (4.52.0)
       base64 (~> 0.2)
       logger (~> 1.4)
       rubyzip (>= 1.2.2, < 4.0)
@@ -712,7 +712,7 @@ CHECKSUMS
   rubyzip (3.7.0) sha256=65c19294da75297a939006f3516deacc33185fbd721ff1954f7a231db6d3e121
   safely_block (1.0.0) sha256=bea80e084e620adeada62fd98cf461bbb9888d40dc0f06d337df9d01e1a658e5
   securerandom (0.4.1) sha256=cc5193d414a4341b6e225f0cb4446aceca8e50d5e1888743fac16987638ea0b1
-  selenium-webdriver (4.51.0) sha256=09edf1b7fc360e0570bac609676f804ed527fe0b2f285e03233561e29b0ec105
+  selenium-webdriver (4.52.0) sha256=5d45ba100ea8b57f5a8c25979a636d48b4c60c39973478930d78e884bdeecd2d
   spree (5.6.1) sha256=e78de770a877ad2bccd536faa251ca33ff86c55808b23e822a1d103418edb911
   spree_admin (5.6.1) sha256=a3e8f8512303f58822b7e85e824f39d8a1cd78fd8bd33fa2b6cbec5a107f88f9
   spree_api (5.6.1) sha256=92bc8b2000745e2be7aed9f80aa221cc007df5233203f276aa3dad3f6daf2202
